@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{plot_statistics}
-  s.version = "0.0.0"
+  s.version = "0.1.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Asa Wilson"]
@@ -25,10 +25,12 @@ Gem::Specification.new do |s|
      "README.rdoc",
      "Rakefile",
      "VERSION",
+     "bin/plot_statistics",
      "lib/plot_statistics.rb",
      "lib/plot_statistics/clam.rb",
      "lib/plot_statistics/clam_plot.rb",
      "lib/plot_statistics/monte_carlo.rb",
+     "plot_statistics.gemspec",
      "spec/plot_statistics_spec.rb",
      "spec/spec.opts",
      "spec/spec_helper.rb"
