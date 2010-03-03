@@ -1,0 +1,32 @@
+#!/usr/bin/env ruby
+
+begin
+  require 'plot_statistics'
+rescue LoadError
+  require 'rubygems'
+  gem     'plot_statistics'
+  require 'plot_statistics'
+end
+
+ARGV.each do |file_name|
+  file = File.new(file_name)
+
+  puts "\n"
+  puts '##########################'
+  puts "#   #{file_name}"
+  puts '##########################'
+  puts "\n"
+
+  lines = file.readlines
+
+  clams = lines.map do |line|
+    x, y = line.strip.split("\t")
+    PlotStatistics::Clam.new(:x => x.to_i, :y => y.to_i)
+  end
+
+  actual_plot = PlotStatistics::ClamPlot.new(clams)
+  monte_carlo = PlotStatistics::MonteCarlo.new(actual_plot.number_of_clams)
+
+  puts actual_plot.inspect
+  puts monte_carlo.inspect
+end

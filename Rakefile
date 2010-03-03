@@ -5,11 +5,14 @@ begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
     gem.name = "plot_statistics"
-    gem.summary = %Q{TODO: one-line summary of your gem}
-    gem.description = %Q{TODO: longer description of your gem}
+    gem.summary = %Q{Statistics on clam plots}
+    gem.description = %Q{This is a gem I built for my wife to analyze various clam plots.}
     gem.email = "acvwilson@gmail.com"
     gem.homepage = "http://github.com/acvwilson/plot_statistics"
     gem.authors = ["Asa Wilson"]
+
+    gem.files.include %w(lib/plot_statistics/*.rb)
+
     gem.add_development_dependency "rspec", ">= 1.2.9"
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
