@@ -1,15 +1,15 @@
-= plot_statistics
+# plot_statistics
 
 This is a library originally designed to run Ripley's K analyses on Clam Plots.  The input is any number of tab separated files with an x and a y column like so:
 
-21  23
-4   45
-32  99
-32  32
+> 21  23
+> 4   45
+> 32  99
+> 32  32
 
 The output is a Tab separated file that shows the output of the Ripley's K analysis and then mean and upper and lower limits of a Monte Carlo simulation of the data.
 
-== Note on Patches/Pull Requests
+## Note on Patches/Pull Requests
 
 * Fork the project.
 * Make your feature addition or bug fix.
@@ -19,6 +19,6 @@ The output is a Tab separated file that shows the output of the Ripley's K analy
   (if you want to have your own version, that is fine but bump version in a commit by itself I can ignore when I pull)
 * Send me a pull request. Bonus points for topic branches.
 
-== Copyright
+## Copyright
 
 Copyright (c) 2010 Asa Wilson. See LICENSE for details.
