@@ -9,6 +9,8 @@ rescue LoadError
 end
 
 ARGV.each do |file_name|
+  puts "\nCommand started at: #{Time.now}\n"
+
   file = File.new(file_name)
 
   puts "\n"
@@ -24,9 +26,15 @@ ARGV.each do |file_name|
     PlotStatistics::Clam.new(:x => x.to_i, :y => y.to_i)
   end
 
-  actual_plot = PlotStatistics::ClamPlot.new(clams)
-  monte_carlo = PlotStatistics::MonteCarlo.new(actual_plot.number_of_clams)
+  puts "\nActual plot started at: #{Time.now}\n"
 
+  actual_plot = PlotStatistics::ClamPlot.new(clams)
   puts actual_plot.inspect
+
+  puts "\nMonte Carlo plots started at: #{Time.now}\n"
+
+  monte_carlo = PlotStatistics::MonteCarlo.new(actual_plot.number_of_clams)
   puts monte_carlo.inspect
+
+  puts "\mCommand finished at: #{Time.now}\n"
 end
