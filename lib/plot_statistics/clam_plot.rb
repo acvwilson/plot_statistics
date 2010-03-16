@@ -23,7 +23,6 @@ class PlotStatistics
 
     def setup_clam_distances(clams)
       clams.each_with_index do |reference_clam, i|
-        # next if (clams.size - 1) < i
         clams[(i + 1)..-1].each do |other_clam|
           distance = distance_between_clams(reference_clam, other_clam)
           reference_clam.distances << distance
@@ -38,13 +37,15 @@ class PlotStatistics
 
     def calculate_stats
       (1..MAX_RADIUS).each do |radius|
-        circle_proportion = 1.0
 
         sums = clams.inject(0) do |sum, clam|
           clams_inside_circle = clam.distances.select { |distance| distance <= radius }
 
+          circle_proportion = Circle.new(:clam => clam, :radius => radius).proportion_inside_plot
+          reciprocal_proportion = 1 / circle_proportion
+
           clams_inside_circle.inject(0) do |sum, inside_clam|
-            ( circle_proportion * 1.0 ) / ( number_of_clams ** 2 )
+            ( reciprocal_proportion * 1.0 ) / ( number_of_clams ** 2 )
           end
         end
 

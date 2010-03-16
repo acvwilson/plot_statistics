@@ -9,25 +9,26 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Asa Wilson"]
-  s.date = %q{2010-03-03}
+  s.date = %q{2010-03-15}
   s.default_executable = %q{plot_statistics}
-  s.description = %q{This is a gem I built for my wife to analyze various clam plots.}
+  s.description = %q{This is a gem to do a Ripley's K analysis}
   s.email = %q{acvwilson@gmail.com}
   s.executables = ["plot_statistics"]
   s.extra_rdoc_files = [
     "LICENSE",
-     "README.rdoc"
+     "README.markdown"
   ]
   s.files = [
     ".document",
      ".gitignore",
      "LICENSE",
-     "README.rdoc",
+     "README.markdown",
      "Rakefile",
      "VERSION",
      "bin/plot_statistics",
      "lib/plot_statistics.rb",
      "lib/plot_statistics/clam.rb",
+     "lib/plot_statistics/clam_circle.rb",
      "lib/plot_statistics/clam_plot.rb",
      "lib/plot_statistics/monte_carlo.rb",
      "plot_statistics.gemspec",
@@ -39,7 +40,7 @@ Gem::Specification.new do |s|
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.6}
-  s.summary = %q{Statistics on clam plots}
+  s.summary = %q{This is a gem to do a Ripley's K analysis}
   s.test_files = [
     "spec/plot_statistics_spec.rb",
      "spec/spec_helper.rb"
