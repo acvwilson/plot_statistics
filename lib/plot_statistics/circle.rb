@@ -1,71 +1,53 @@
 class PlotStatistics
   class Circle
-    attr_accessor :clam, :radius, :sample_points, :proportion_inside_plot
-
-    DEGREES = [15, 30, 45, 60, 75, 90, 105, 120, 135, 150, 165, 180, 195, 210, 225, 240, 255, 270, 285, 300, 315, 330, 345, 360]
-    RADIANS_TO_DEGREES = 360.0 / (2.0 * Math::PI)
+    attr_accessor :clam, :radius, :distance_from_bound, :proportion_inside_plot
 
     def initialize(params={})
       @clam = params[:clam]
-      @radius = params[:radius]
-      @sample_points = { :out_of_bounds => 0.0, :in_bounds => 0.0 }
-      @proportion_inside_plot = out_of_bounds? ? estimate_proportion_inside_plot : 1.0
-    end
-
-    def create_samples
-      sample_circles = radius * 2
-      sample_radius = 0.5
-      sample_circles.times do
-        DEGREES.each do |degrees|
-          x = clam.x + sample_radius * Math.cos(degrees / RADIANS_TO_DEGREES)
-          y = clam.y + sample_radius * Math.sin(degrees / RADIANS_TO_DEGREES)
-
-          if point_out_of_bounds?(x, y)
-            sample_points[:out_of_bounds] += 1
-          else
-            sample_points[:in_bounds] += 1
-          end
-        end
-
-        sample_radius += 0.5
-      end
+      @radius = params[:radius].to_f
+      @distance_from_bound = find_distance_from_bounds
+      @proportion_inside_plot = estimate_proportion_inside_plot
     end
 
     def estimate_proportion_inside_plot
-      create_samples
-      sample_points[:in_bounds] / (sample_points[:in_bounds] + sample_points[:out_of_bounds])
-    end
-
-    def point_out_of_bounds?(x, y)
-      [x, y].each do |coordinate|
-        return true unless coordinate > 0 && coordinate < 100
+      distance_from_bound.reject! {|distance| distance > radius}
+      case distance_from_bound.size
+      when 1
+        proportion_for_one_side_out
+      when 2
+        proportion_for_two_sides_out
+      else
+        1.0
       end
-      false
     end
 
-    def out_of_bounds?
-      right_out_of_bounds?  ||
-      left_out_of_bounds?   ||
-      top_out_of_bounds?    ||
-      bottom_out_of_bounds?
+    def proportion_for_one_side_out
+      1 - Math.acos( distance_from_bound.pop / radius ) / Math::PI
     end
 
-    def right_out_of_bounds?
-      clam.x + radius > 100
+    def proportion_for_two_sides_out
+      if corners_outside_radius.size == 3
+        1 - ( Math.acos( distance_from_bound.pop / radius ) + Math.acos( distance_from_bound.pop / radius ) + Math::PI / 2 ) / (Math::PI * 2)
+      else
+        1 - ( 2 * Math.acos( distance_from_bound.pop / radius ) + 2 * Math.acos( distance_from_bound.pop / radius ) ) / (Math::PI * 2)
+      end
     end
 
-    def left_out_of_bounds?
-      clam.x - radius < 0
+    def find_distance_from_bounds
+      [
+        (clam.y - 100).abs, # distance from top
+        (clam.x - 100).abs, # distance from right
+        clam.x,             # distance from left
+        clam.y              # distance from bottom
+      ]
     end
 
-    def top_out_of_bounds?
-      clam.y + radius > 100
+    def corners_outside_radius
+      ClamPlot::PLOT_CORNERS.map do |corner|
+        distance = Math.sqrt((corner.first - clam.x) ** 2 + (corner.last - clam.y) ** 2)
+        next if distance < radius
+        distance
+      end.compact
     end
-
-    def bottom_out_of_bounds?
-      clam.y - radius < 0
-    end
-
-
   end
 end

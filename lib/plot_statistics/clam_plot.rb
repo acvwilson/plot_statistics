@@ -4,6 +4,7 @@ class PlotStatistics
 
     AREA_OF_PLOT  = 10_000
     MAX_RADIUS    = 50
+    PLOT_CORNERS = [[0,0], [0,100], [100,0], [100,100]]
 
     def initialize(clams)
       @clams = clams
