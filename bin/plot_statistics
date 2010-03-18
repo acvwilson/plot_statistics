@@ -8,33 +8,25 @@ rescue LoadError
   require 'plot_statistics'
 end
 
-ARGV.each do |file_name|
-  puts "\nCommand started at: #{Time.now}\n"
-
-  file = File.new(file_name)
-
-  puts "\n"
-  puts '##########################'
-  puts "#   #{file_name}"
-  puts '##########################'
-  puts "\n"
-
+ARGV.each do |filename|
+  file = File.new(filename)
   lines = file.readlines
+  file.close
+
+  puts "\n"
+  puts '##########################'
+  puts "#   #{filename}"
+  puts '##########################'
+  puts "\n"
 
   clams = lines.map do |line|
     x, y = line.strip.split("\t")
     PlotStatistics::Clam.new(:x => x.to_i, :y => y.to_i)
   end
 
-  puts "\nActual plot started at: #{Time.now}\n"
-
   actual_plot = PlotStatistics::ClamPlot.new(clams)
-  puts actual_plot.inspect
-
-  puts "\nMonte Carlo plots started at: #{Time.now}\n"
-
   monte_carlo = PlotStatistics::MonteCarlo.new(actual_plot.number_of_clams)
-  puts monte_carlo.inspect
 
-  puts "\mCommand finished at: #{Time.now}\n"
+  output_filename = filename + '.result.csv'
+  PlotStatistics::Output.new(:clam_plot => actual_plot, :monte_carlo => monte_carlo).write_to_file(output_filename)
 end

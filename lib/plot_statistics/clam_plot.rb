@@ -43,7 +43,7 @@ class PlotStatistics
           clams_inside_circle = clam.distances.select { |distance| distance <= radius }
 
           circle_proportion = Circle.new(:clam => clam, :radius => radius).proportion_inside_plot
-          reciprocal_proportion = 1 / circle_proportion
+          reciprocal_proportion = 1.0 / circle_proportion
 
           clams_inside_circle.inject(0) do |sum, inside_clam|
             ( reciprocal_proportion * 1.0 ) / ( number_of_clams ** 2 )
