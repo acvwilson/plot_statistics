@@ -11,5 +11,10 @@ class PlotStatistics
     def self.create_random
       new( :x => rand(100), :y => rand(100) )
     end
+
+    def ==(other)
+      return super(other) unless other.kind_of?(PlotStatistics::Clam)
+      self.x == other.x && self.y == other.y
+    end
   end
 end

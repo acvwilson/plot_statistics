@@ -13,20 +13,24 @@ ARGV.each do |filename|
   lines = file.readlines
   file.close
 
-  puts "\n"
-  puts '##########################'
-  puts "#   #{filename}"
-  puts '##########################'
-  puts "\n"
-
+  puts "Analyzing #{filename}"
+  printf "Importing Clams"
   clams = lines.map do |line|
-    x, y = line.strip.split("\t")
+    line = line.strip.split("\t")
+    next if line.empty?
+    x, y = line
+    printf "."
     PlotStatistics::Clam.new(:x => x, :y => y)
-  end
+  end.compact
 
+  puts "Running Ripley's K analysis of plot"
   actual_plot = PlotStatistics::ClamPlot.new(clams)
+
+  puts "Running Monte Carlo Simulations of plot"
   monte_carlo = PlotStatistics::MonteCarlo.new(actual_plot.number_of_clams)
 
   output_filename = filename + '.ripleys_k.csv'
   PlotStatistics::Output.new(:clam_plot => actual_plot, :monte_carlo => monte_carlo).write_to_file(output_filename)
+
+  puts "Done™"
 end

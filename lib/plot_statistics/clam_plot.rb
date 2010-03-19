@@ -14,6 +14,12 @@ class PlotStatistics
     end
 
     def self.create_random(number_of_clams)
+      clams = []
+      while clams.size < 100 do
+        new_clam = Clam.create_random
+        next if clams.any? { |clam| clam == new_clam }
+        clams << new_clam
+      end
       clams = (1..number_of_clams).map { Clam.create_random }
       new(clams)
     end
@@ -51,21 +57,30 @@ class PlotStatistics
     def calculate_stats
       (1..MAX_RADIUS).each do |radius|
 
-        sums = clams.inject(0.0) do |sum, clam|
-          clams_inside_circle = clam.distances.select { |distance| distance <= radius }
-
-          circle_proportion = Circle.new(:clam => clam, :radius => radius).proportion_inside_plot
-          reciprocal_proportion = 1.0 / circle_proportion
-
-          reciprocal_proportion * clams_inside_circle.size
-        end
-
-        k_t = AREA_OF_PLOT * sums / (number_of_clams ** 2)
-        l_t = radius - Math.sqrt( k_t / Math::PI)
+        k_t = calculate_k_t(radius)
+        l_t = calculate_l_t(k_t, radius)
 
         stats.k_ts << k_t
         stats.l_ts << l_t
       end
+    end
+
+    def calculate_k_t(radius)
+      sums = clams.inject(0.0) do |sum, clam|
+        clams_inside_circle = clam.distances.select { |distance| distance <= radius }
+
+        circle_proportion = Circle.new(:clam => clam, :radius => radius).proportion_inside_plot
+        reciprocal_proportion = 1.0 / circle_proportion
+
+        inner_sum = reciprocal_proportion * clams_inside_circle.size
+        sum += inner_sum
+      end
+
+      AREA_OF_PLOT * sums / (number_of_clams ** 2)
+    end
+
+    def calculate_l_t(k_t, radius)
+      radius - Math.sqrt( k_t / Math::PI)
     end
   end
 end
