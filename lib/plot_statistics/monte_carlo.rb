@@ -2,7 +2,7 @@ class PlotStatistics
   class MonteCarlo
     attr_accessor :plots, :stats
 
-    def initialize(number_of_clams, number_of_plots=100)
+    def initialize(number_of_clams, number_of_plots=100.0)
       @plots = (1..number_of_plots).map { ClamPlot.create_random number_of_clams }
       @stats = OpenStruct.new(:mean        => OpenStruct.new(:k_ts => [], :l_ts => []),
                               :upper_limit => OpenStruct.new(:k_ts => [], :l_ts => []),
@@ -20,8 +20,8 @@ class PlotStatistics
 
     def calculate_limits
       (0...ClamPlot::MAX_RADIUS).each do |radius|
-        threshold_k = standard_deviation_k(radius) * 2
-        threshold_l = standard_deviation_l(radius) * 2
+        threshold_k = standard_deviation_k(radius) * 2.0
+        threshold_l = standard_deviation_l(radius) * 2.0
 
         stats.upper_limit.k_ts << (stats.mean.k_ts[radius] + threshold_k)
         stats.upper_limit.l_ts << (stats.mean.l_ts[radius] + threshold_l)
@@ -31,7 +31,7 @@ class PlotStatistics
     end
 
     def standard_deviation_k(radius)
-      sum = plots.inject(0) do |sum, plot|
+      sum = plots.inject(0.0) do |sum, plot|
         (plot.stats.k_ts[radius] - stats.mean.k_ts[radius]) ** 2
       end
 
@@ -39,7 +39,7 @@ class PlotStatistics
     end
 
     def standard_deviation_l(radius)
-      sum = plots.inject(0) do |sum, plot|
+      sum = plots.inject(0.0) do |sum, plot|
         (plot.stats.l_ts[radius] - stats.mean.l_ts[radius]) ** 2
       end
 
@@ -51,7 +51,7 @@ class PlotStatistics
     end
 
     def average_k(radius)
-      sum = plots.inject(0) do |sum, plot|
+      sum = plots.inject(0.0) do |sum, plot|
         plot.stats.k_ts[radius]
       end
 
@@ -59,7 +59,7 @@ class PlotStatistics
     end
 
     def average_l(radius)
-      sum = plots.inject(0) do |sum, plot|
+      sum = plots.inject(0.0) do |sum, plot|
         plot.stats.l_ts[radius]
       end
 

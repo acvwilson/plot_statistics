@@ -2,7 +2,7 @@ class PlotStatistics
   class ClamPlot
     attr_accessor :clams, :stats
 
-    AREA_OF_PLOT  = 10_000
+    AREA_OF_PLOT  = 1 # this is in meters everything else is in centimeters
     MAX_RADIUS    = 50
     PLOT_CORNERS = [[0,0], [0,100], [100,0], [100,100]]
 
@@ -18,8 +18,20 @@ class PlotStatistics
       new(clams)
     end
 
+    def self.create_regular(distance=5)
+      clams = []
+      (0..100).each do |x|
+        (0..100).each do |y|
+          mod_x = x % distance
+          mod_y = x % distance
+          clams << Clam.new(:x => x, :y => y) if mod_x == 0 && mod_y == 0
+        end
+      end
+      new(clams)
+    end
+
     def number_of_clams
-      clams.size
+      clams.size.to_f
     end
 
     def setup_clam_distances(clams)
@@ -39,18 +51,16 @@ class PlotStatistics
     def calculate_stats
       (1..MAX_RADIUS).each do |radius|
 
-        sums = clams.inject(0) do |sum, clam|
+        sums = clams.inject(0.0) do |sum, clam|
           clams_inside_circle = clam.distances.select { |distance| distance <= radius }
 
           circle_proportion = Circle.new(:clam => clam, :radius => radius).proportion_inside_plot
           reciprocal_proportion = 1.0 / circle_proportion
 
-          clams_inside_circle.inject(0) do |sum, inside_clam|
-            ( reciprocal_proportion * 1.0 ) / ( number_of_clams ** 2 )
-          end
+          reciprocal_proportion * clams_inside_circle.size
         end
 
-        k_t = AREA_OF_PLOT * sums
+        k_t = AREA_OF_PLOT * sums / (number_of_clams ** 2)
         l_t = radius - Math.sqrt( k_t / Math::PI)
 
         stats.k_ts << k_t

@@ -21,12 +21,12 @@ ARGV.each do |filename|
 
   clams = lines.map do |line|
     x, y = line.strip.split("\t")
-    PlotStatistics::Clam.new(:x => x.to_i, :y => y.to_i)
+    PlotStatistics::Clam.new(:x => x, :y => y)
   end
 
   actual_plot = PlotStatistics::ClamPlot.new(clams)
   monte_carlo = PlotStatistics::MonteCarlo.new(actual_plot.number_of_clams)
 
-  output_filename = filename + '.result.csv'
+  output_filename = filename + '.ripleys_k.csv'
   PlotStatistics::Output.new(:clam_plot => actual_plot, :monte_carlo => monte_carlo).write_to_file(output_filename)
 end

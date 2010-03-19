@@ -26,7 +26,7 @@ class PlotStatistics
     end
 
     def proportion_for_two_sides_out
-      if corners_outside_radius.size == 3
+      if corners_outside_circle.size == 3
         1 - ( Math.acos( distance_from_bound.pop / radius ) + Math.acos( distance_from_bound.pop / radius ) + Math::PI / 2 ) / (Math::PI * 2)
       else
         1 - ( 2 * Math.acos( distance_from_bound.pop / radius ) + 2 * Math.acos( distance_from_bound.pop / radius ) ) / (Math::PI * 2)
@@ -35,14 +35,14 @@ class PlotStatistics
 
     def find_distance_from_bounds
       [
-        (clam.y - 100).abs, # distance from top
-        (clam.x - 100).abs, # distance from right
-        clam.x,             # distance from left
-        clam.y              # distance from bottom
+        100 - clam.y, # distance from top
+        100 - clam.x, # distance from right
+        clam.x,       # distance from left
+        clam.y        # distance from bottom
       ]
     end
 
-    def corners_outside_radius
+    def corners_outside_circle
       ClamPlot::PLOT_CORNERS.map do |corner|
         distance = Math.sqrt((corner.first - clam.x) ** 2 + (corner.last - clam.y) ** 2)
         next if distance < radius
