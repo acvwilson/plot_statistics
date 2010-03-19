@@ -61,7 +61,9 @@ class PlotStatistics
         end
 
         k_t = AREA_OF_PLOT * sums / (number_of_clams ** 2)
-        l_t = radius - Math.sqrt( k_t / Math::PI)
+
+        expected = number_of_clams * Math::PI * (radius ** 2) / AREA_OF_PLOT
+        l_t = expected - Math.sqrt( k_t / Math::PI)
 
         stats.k_ts << k_t
         stats.l_ts << l_t
