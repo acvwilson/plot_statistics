@@ -2,7 +2,7 @@ class PlotStatistics
   class ClamPlot
     attr_accessor :clams, :stats
 
-    AREA_OF_PLOT  = 1 # this is in meters everything else is in centimeters
+    AREA_OF_PLOT  = 10_000
     MAX_RADIUS    = 50
     PLOT_CORNERS = [[0,0], [0,100], [100,0], [100,100]]
 
