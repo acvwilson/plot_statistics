@@ -14,6 +14,7 @@ begin
     gem.files.include %w(lib/plot_statistics/*.rb)
 
     gem.add_development_dependency "rspec", ">= 1.2.9"
+    gem.add_dependency 'fastercsv', ">= 1.5.0"
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
   Jeweler::GemcutterTasks.new

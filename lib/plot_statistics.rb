@@ -1,5 +1,6 @@
 class PlotStatistics
   require 'ostruct'
+  require 'fastercsv'
 
   require File.dirname(__FILE__) + '/plot_statistics/circle'
   require File.dirname(__FILE__) + '/plot_statistics/clam'
