@@ -1,0 +1,39 @@
+#!/usr/bin/env ruby
+
+begin
+  require 'plot_statistics'
+rescue LoadError
+  require 'rubygems'
+  gem     'plot_statistics'
+  require 'plot_statistics'
+end
+
+ARGV.each do |filename|
+  filename = "../High Aggregated Plot 1.txt"
+  file = File.new(filename)
+  lines = file.readlines
+  file.close
+
+  puts "Analyzing #{filename}"
+  printf "Importing Clams"
+  live_clams = []
+  dead_clams = []
+  lines.each do |line|
+    line = line.strip.split("\t")
+    next if line.empty?
+    x, y, number_eaten = line
+    (5 - number_eaten).times { printf "."; live_clams << PlotStatistics::Clam.new(:x => x, :y => y) }
+    number_eaten.to_i.times { printf "."; dead_clams << PlotStatistics::Clam.new(:x => x, :y => y) }
+  end.compact
+
+  puts "Running Ripley's K analysis of plot"
+  actual_plot = PlotStatistics::ClamPlot.new(live_clams, dead_clams).bivariate_analysis
+
+  puts "Running Monte Carlo Simulations of plot"
+  monte_carlo = PlotStatistics::MonteCarlo.new_bivariate(actual_plot).bivariate_analysis
+
+  output_filename = filename + '.ripleys_k.csv'
+  PlotStatistics::Output.new(:clam_plot => actual_plot, :monte_carlo => monte_carlo).to_bivariate_file(output_filename)
+
+  puts "Done™"
+end
