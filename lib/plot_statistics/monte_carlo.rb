@@ -2,68 +2,75 @@ class PlotStatistics
   class MonteCarlo
     attr_accessor :plots, :stats
 
-    def initialize(number_of_clams, number_of_plots=100.0)
-      @plots = (1..number_of_plots).map { ClamPlot.create_random number_of_clams }
-      @stats = OpenStruct.new(:mean        => OpenStruct.new(:k_ts => [], :l_ts => []),
-                              :upper_limit => OpenStruct.new(:k_ts => [], :l_ts => []),
-                              :lower_limit => OpenStruct.new(:k_ts => [], :l_ts => []))
-      calculate_means
-      calculate_limits
+    def initialize(params={})
+      @plots = params[:plots]
     end
 
-    def calculate_means
+    def self.new_univariate(number_of_clams, number_of_plots=500.0)
+      plots = (1..number_of_plots).map { ClamPlot.create_random(number_of_clams).univariate_analysis }
+      new(:plots => plots)
+    end
+
+    def self.new_bivariate(actual_plot, number_of_plots=500.0)
+      plots = (1..number_of_plots).map { ClamPlot.create_random_from(actual_plot).bivariate_analysis }
+      new(:plots => plots)
+    end
+
+    def bivariate_analysis
+      self.stats = OpenStruct.new(:mean        => OpenStruct.new(:k_ts => [], :dead_k_ts => [], :l_ts => []),
+                                  :upper_limit => OpenStruct.new(:k_ts => [], :dead_k_ts => [], :l_ts => []),
+                                  :lower_limit => OpenStruct.new(:k_ts => [], :dead_k_ts => [], :l_ts => []))
+      calculate_means([:k_ts, :dead_k_ts, :l_ts])
+      calculate_limits([:k_ts, :dead_k_ts, :l_ts])
+      self
+    end
+
+    def univariate_analysis
+      self.stats = OpenStruct.new(:mean        => OpenStruct.new(:k_ts => [], :l_ts => []),
+                                  :upper_limit => OpenStruct.new(:k_ts => [], :l_ts => []),
+                                  :lower_limit => OpenStruct.new(:k_ts => [], :l_ts => []))
+      calculate_means([:k_ts, :l_ts])
+      calculate_limits([:k_ts, :l_ts])
+      self
+    end
+
+    def calculate_means(means_for)
       (0...ClamPlot::MAX_RADIUS).each do |radius|
-        stats.mean.k_ts << average_k(radius)
-        stats.mean.l_ts << average_l(radius)
+        means_for.each do |stat|
+          stats.mean.send(stat) << average_stat(radius, stat)
+        end
       end
     end
 
-    def calculate_limits
+    def calculate_limits(limits_for)
       (0...ClamPlot::MAX_RADIUS).each do |radius|
-        threshold_k = standard_deviation_k(radius) * 2.0
-        threshold_l = standard_deviation_l(radius) * 2.0
+        limits_for.each do |stat|
+          threshold = standard_deviation_stat(radius, stat) * 2.0
 
-        stats.upper_limit.k_ts << (stats.mean.k_ts[radius] + threshold_k)
-        stats.upper_limit.l_ts << (stats.mean.l_ts[radius] + threshold_l)
-        stats.lower_limit.k_ts << (stats.mean.k_ts[radius] - threshold_k)
-        stats.lower_limit.l_ts << (stats.mean.l_ts[radius] - threshold_l)
+          stats.upper_limit.send(stat) << (stats.mean.send(stat)[radius] + threshold)
+          stats.lower_limit.send(stat) << (stats.mean.send(stat)[radius] - threshold)
+        end
       end
     end
 
-    def standard_deviation_k(radius)
+    def standard_deviation_stat(radius, stat)
       sum = plots.inject(0.0) do |sum, plot|
-        (plot.stats.k_ts[radius] - stats.mean.k_ts[radius]) ** 2
+        (plot.stats.send(stat)[radius] - stats.mean.send(stat)[radius]) ** 2
       end
 
       Math.sqrt(sum / number_of_plots)
     end
 
-    def standard_deviation_l(radius)
+    def average_stat(radius, stat)
       sum = plots.inject(0.0) do |sum, plot|
-        (plot.stats.l_ts[radius] - stats.mean.l_ts[radius]) ** 2
+        plot.stats.send(stat)[radius]
       end
 
-      Math.sqrt(sum / number_of_plots)
+      sum / number_of_plots
     end
 
     def number_of_plots
       plots.size
-    end
-
-    def average_k(radius)
-      sum = plots.inject(0.0) do |sum, plot|
-        plot.stats.k_ts[radius]
-      end
-
-      sum / number_of_plots
-    end
-
-    def average_l(radius)
-      sum = plots.inject(0.0) do |sum, plot|
-        plot.stats.l_ts[radius]
-      end
-
-      sum / number_of_plots
     end
   end
 end

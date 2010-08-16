@@ -9,6 +9,7 @@ rescue LoadError
 end
 
 ARGV.each do |filename|
+  filename = "../Clam distributions/Cabbage/Cabbage_3.txt"
   file = File.new(filename)
   lines = file.readlines
   file.close
@@ -24,13 +25,13 @@ ARGV.each do |filename|
   end.compact
 
   puts "Running Ripley's K analysis of plot"
-  actual_plot = PlotStatistics::ClamPlot.new(clams)
+  actual_plot = PlotStatistics::ClamPlot.new(clams).univariate_analysis
 
   puts "Running Monte Carlo Simulations of plot"
-  monte_carlo = PlotStatistics::MonteCarlo.new(actual_plot.number_of_clams)
+  monte_carlo = PlotStatistics::MonteCarlo.new_univariate(actual_plot.number_of_clams).univariate_analysis
 
   output_filename = filename + '.ripleys_k.csv'
-  PlotStatistics::Output.new(:clam_plot => actual_plot, :monte_carlo => monte_carlo).write_to_file(output_filename)
+  PlotStatistics::Output.new(:clam_plot => actual_plot, :monte_carlo => monte_carlo).to_univariate_file(output_filename)
 
   puts "Done™"
 end

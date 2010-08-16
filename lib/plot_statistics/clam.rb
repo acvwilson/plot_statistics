@@ -16,5 +16,9 @@ class PlotStatistics
       return super(other) unless other.kind_of?(PlotStatistics::Clam)
       self.x == other.x && self.y == other.y
     end
+
+    def reset_distances
+      distances.clear
+    end
   end
 end
