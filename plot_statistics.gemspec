@@ -5,15 +5,14 @@
 
 Gem::Specification.new do |s|
   s.name = %q{plot_statistics}
-  s.version = "1.3.0"
+  s.version = "1.4.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Asa Wilson"]
-  s.date = %q{2010-03-19}
-  s.default_executable = %q{plot_statistics}
+  s.date = %q{2010-09-27}
   s.description = %q{This is a gem to do a Ripley's K analysis}
   s.email = %q{acvwilson@gmail.com}
-  s.executables = ["plot_statistics"]
+  s.executables = ["bivariate_ripleys_k", "univariate_ripleys_k"]
   s.extra_rdoc_files = [
     "LICENSE",
      "README.markdown"
@@ -25,7 +24,8 @@ Gem::Specification.new do |s|
      "README.markdown",
      "Rakefile",
      "VERSION",
-     "bin/plot_statistics",
+     "bin/bivariate_ripleys_k",
+     "bin/univariate_ripleys_k",
      "lib/plot_statistics.rb",
      "lib/plot_statistics/circle.rb",
      "lib/plot_statistics/clam.rb",
