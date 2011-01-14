@@ -26,7 +26,11 @@ class PlotStatistics
 
     def to_bivariate_file(filename)
       FasterCSV.open(filename, 'w') do |csv|
-        csv << ['Radius', 'Live K(t)', 'Dead K(t)', 'L(t)', 'Mean Live K(t)', 'Mean Dead K(t)', 'Mean L(t)', 'Upper Live K(t)', 'Lower Live K(t)', 'Upper Dead K(t)', 'Lower Dead K(t)', 'Upper L(t)', 'Lower L(t)']
+        csv << [
+          'Radius', 'Live K(t)', 'Dead K(t)', 'L(t)',
+          'Mean Live K(t)', 'Mean Dead K(t)', 'Mean L(t)', 'Upper Live K(t)', 'Lower Live K(t)',
+          'Upper Dead K(t)', 'Lower Dead K(t)', 'Upper L(t)', 'Lower L(t)'
+        ]
 
         (0...ClamPlot::MAX_RADIUS).each do |position|
           radius = position + 1

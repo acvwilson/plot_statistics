@@ -22,7 +22,7 @@ ARGV.each do |filename|
     line = line.strip.split("\t")
     next if line.empty?
     x, y, number_eaten = line
-    (5 - number_eaten).times { printf "."; live_clams << PlotStatistics::Clam.new(:x => x, :y => y) }
+    (5 - number_eaten.to_i).times { printf "."; live_clams << PlotStatistics::Clam.new(:x => x, :y => y) }
     number_eaten.to_i.times { printf "."; dead_clams << PlotStatistics::Clam.new(:x => x, :y => y) }
   end.compact
 
